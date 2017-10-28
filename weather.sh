@@ -18,6 +18,7 @@ URL=http://api.wunderground.com/api/${APIKEY}/hourly/q/
 ZIP=06032
 STATE=CT
 TIME=3
+help=no
 
 while [ ! -z "$1" ]; do
     case "$1" in
@@ -33,9 +34,25 @@ while [ ! -z "$1" ]; do
             shift
             export TIME="$1"
             ;;
+        -h|--help)
+            help=yes
+            ;;
     esac
     shift
 done
+
+if [ "$help" == "yes" ]; then
+
+    echo "-----------------------------------------------------------"
+    echo "Usage: $0 -z <ZIPCODE> -s <STATE> - t <TIME>"
+    echo "    <ZIPCODE>: Your zipcode, e.g. 06032"
+    echo "    <STATE>  : Your state, e.g. CT"
+    echo "    <TIME>   : how many hours forward, e.g. 3"
+    echo "    e.g. $0 -z 06032 -s CT -t 3"
+    echo "You can modify the default value to run with no argument"
+    echo "-----------------------------------------------------------"
+    return 1
+fi
 
 URL=${URL}${STATE}/${ZIP}.json
 
