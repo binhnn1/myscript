@@ -72,11 +72,13 @@ json_data = os.environ['JSON']
 data = json.loads(json_data)
 data_hours = data['hourly_forecast']
 
+times = int(os.environ['VALUE'])
+
 print sep
 print "|{:25}|{:15}|{:15}|{:15}|".format("Date","Time","Temperature","Condition")
 print sep
 
-for x in range(0, int(os.environ['VALUE'])):
+for x in range(0, min(times, 35)):
     data_hour = data_hours[x]
     
     #pretty = data_hour['FCTTIME']['pretty']
@@ -98,7 +100,7 @@ for x in range(0, int(os.environ['VALUE'])):
     result = "|{:25}|{:15}|{:15}|{:15}|".format(datetime, hour, temp, condition)
 
     print result.expandtabs(tab)
-    if date != daten:
+    if date != daten and x+1 < times:
         print sep
 END
 }
