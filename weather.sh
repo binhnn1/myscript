@@ -73,6 +73,7 @@ data = json.loads(json_data)
 data_hours = data['hourly_forecast']
 
 times = int(os.environ['VALUE'])
+times = max(times, 1)
 
 print sep
 print "|{:25}|{:15}|{:15}|{:15}|".format("Date","Time","Temperature","Condition")
