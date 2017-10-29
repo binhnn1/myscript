@@ -59,17 +59,43 @@ URL=${URL}${STATE}/${ZIP}.json
 
 JSON=$(curl -s $URL)
 
+echo Weather forecast for $STATE, $ZIP:
 parse_data() {
     VALUE="$2" JSON="$1" python - <<END 
 import json, os
 
+degreeF = "\xE2\x84\x89"
+tab = 10
+sep = "--------------------------------------------------------------------------------------------------"
 json_data = os.environ['JSON']
 data = json.loads(json_data)
 data_hours = data['hourly_forecast']
 
+print sep
+print "Date\t\t\t\tTime\t\tTemperature\tCondition".expandtabs(tab)
+print sep
+
 for x in range(0, int(os.environ['VALUE'])):
     data_hour = data_hours[x]
-    print data_hour['FCTTIME']['pretty'] + ": " + data_hour['temp']['english'] + "F"
+    
+    #pretty = data_hour['FCTTIME']['pretty']
+
+    week_day = data_hour['FCTTIME']['weekday_name']
+    month = data_hour['FCTTIME']['month_name_abbrev']
+    
+    date = data_hour['FCTTIME']['mday']
+    daten = data_hours[x+1]['FCTTIME']['mday']
+    
+    year = data_hour['FCTTIME']['year']
+    hour = data_hour['FCTTIME']['civil']
+
+    temp = data_hour['temp']['english']
+    condition = data_hour['icon']
+    
+    result = week_day + ", " + month + " " + date + ", " + year + "\t\t" + hour + "\t\t" + temp + degreeF.decode('utf-8') + "\t\t" + condition
+    print result.expandtabs(tab)
+    if date != daten:
+        print sep
 END
 }
 
