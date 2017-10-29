@@ -58,22 +58,22 @@ URL=${URL}${STATE}/${ZIP}.json
 
 
 JSON=$(curl -s $URL)
-
-echo "|---------------------------------------------------------------|"
-echo "|Weather forecast for $STATE, $ZIP                                 |"
+NOW=$( date +"%r")
+echo "|-------------------------------------------------------------------------|"
+echo "|Weather Forecast For $STATE, $ZIP - Current Time: $NOW               |"
 
 parse_data() {
     VALUE="$2" JSON="$1" python - <<END 
 import json, os
 
 tab = 10
-sep = "|---------------------------------------------------------------|"
+sep = "|-------------------------------------------------------------------------|"
 json_data = os.environ['JSON']
 data = json.loads(json_data)
 data_hours = data['hourly_forecast']
 
 print sep
-print "|{:25}|{:10}|{:10}|{:15}|".format("Date","Time","Temp.","Condition")
+print "|{:25}|{:15}|{:15}|{:15}|".format("Date","Time","Temperature","Condition")
 print sep
 
 for x in range(0, int(os.environ['VALUE'])):
@@ -95,7 +95,7 @@ for x in range(0, int(os.environ['VALUE'])):
     condition = data_hour['icon']
     
 
-    result = "|{:25}|{:10}|{:10}|{:15}|".format(datetime, hour, temp, condition)
+    result = "|{:25}|{:15}|{:15}|{:15}|".format(datetime, hour, temp, condition)
 
     print result.expandtabs(tab)
     if date != daten:
@@ -104,4 +104,4 @@ END
 }
 
 parse_data "$JSON" "$TIME"
-echo "|---------------------------------------------------------------|"
+echo "|-------------------------------------------------------------------------|"
